@@ -1,0 +1,116 @@
+Prac 3 To Validate inputs of a form (bk-3 pagename)
+SharePoint: 36_prac4
+
+Power apps:
+Make a login page w username, password and submit button.
+1.	Go to sharepoint
+2.	Make a connection to sharepoint
+3.	Create team sites default
+4.	Create a new list 
+Add Relevant Columns in the list
+5.	Go to power app and make a login page
+
+(2 Screens- Login and Successful)
+6.	Connect Data Source to sharepoint using URL
+7.	Login formula 
+Formula: On login button 
+If(
+  !IsBlank(LookUp(list name, Username=TextInput3.Text And Password=TextInput5.Text, Title)),
+  Navigate(Screen2),
+  UpdateContext({showForgetMessage: true})  
+)
+
+
+
+
+
+Prac 4
+1.	Make table on Sharepoint
+2.	Insert Edit Form
+3.	Make a connection to sharepoint (All the columns get added)
+4.	Remove all columns that you don't require.
+5.	OnSuccess - Formula for the whole form
+6.	Form2, Default mode from top left, new
+7.	Submit button formula:
+OnSelect: SubmitForm(Formname)
+8.	OnSuccess(Screen2)
+9.	Go to Form go on DefaultMode and edit New
+
+
+
+
+
+
+Prac 5: bk-5
+1.	Make a connection to sharepoint on datasource
+2.	Make a list in Sharepoint
+3.	Add relevant columns of products and prices
+4.	Make a screen with Gallery on PowerApps’
+5.	Add InputText1= “Search”
+6.	Formula for Gallery: 
+Go to items in advanced: Filter(‘product’,StartsWith(Title,TextInput1.Text))
+
+
+
+
+Prac 6: bk-6 Connection to Excel
+1.	App (tablet format)
+2.	Open Excel and make relevant columns
+3.	Make them into a table using Insert
+4.	Go to Powerapps, Insert Vertical Gallery and connect it to table
+5.	Connect to Excel OneDrive with URL (Data, Add Data, Search for Excel filename)
+6.	Make a EditForm form on the otherside and edit Field add tabl
+7.	Left corner Templatefill If(ThisItsm.IsSelected, ColourFade(RBGA(43,53,44,65),-2%),RGBA(0,0,0,0)
+8.	Go to form, item
+9.	Gallery1.Selected
+
+
+
+
+Prac 7: bk-7 Validation
+
+Make a Form:
+Components- 
+>Employee Name: Validation- Required field
+Steps: To implement required field validation in Power Apps
+1. Select the card.
+2. From the advance properties, choose to unlock.
+3. On the required property of the card, change it to be true. (top line where the function is to be written.)
+4. Use cancel for input text
+Insert an icon in the Employee Name text box.
+function: Icon 
+if(IsBlank (DataCardValue.Text), Icon Cancel, Icon.Check)
+
+ForEmail: if(IsMatch (DataCardValue.Text, Match.Exam), Icon Check, Icon.Cancel)
+
+5. DefaultMode change to New
+
+function: Color
+if(Self.Icon=Check,Green,Red)
+
+Employee Id: Validation- Must be a number
+Steps: Same 1 and 2
+3. Select the text box 
+4. make the format property to be number.
+
+
+
+
+
+
+Practical 8: 
+
+All in icon settings
+To avoid blank fiedls:
+If(!IsBlank(DataCardValue2.Text), Icon.Check , Icon.Cancel)
+
+Email:
+If(!IsMatch(DataCardValue3.Text, Match.Email), Icon.Cancel, Icon.Check)
+
+Phone and zipcode:
+If(Len(DataCardValue5.Text) = 10 && IsNumeric(DataCardValue5.Text), Icon.Check, Icon.Cancel)
+
+If(Len(DataCardValue6.Text) = 6 && IsNumeric(DataCardValue6.Text), Icon.Check, Icon.Cancel)
+
+Age:
+If( IsNumeric(DataCardValue4.Text) && Value(DataCardValue4.Text) >= 18 && Value(DataCardValue4.Text) <= 35, Icon.Check, Icon.Cancel)
