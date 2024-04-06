@@ -1,0 +1,79 @@
+Step 1: Create HelloWorld.java
+ public class HelloWorld 
+                       { public static void main(String[] args)
+                                   { System.out.println("Hello, World!"); 
+                                                          }  
+                        }
+ File Name: HelloWorld.java 
+
+Step 2: Compile the Java Application: 
+Open a terminal and navigate to the directory containing HelloWorld.java.
+ Compile the Java code using the javac command. 
+
+Step 3: Create a Dockerfile:
+Create a Dockerfile in the same directory as your Java source code.
+This file specifies how the Docker image should be built. 
+FROM openjdk:11
+ COPY HelloWorld.class /app/HelloWorld.class 
+WORKDIR /app
+ CMD ["java", "HelloWorld"]
+ 
+Step 4: Build the Docker Image:
+
+ Build the Docker image using the following command: 
+docker build -t helloworld-java . 
+This command creates a Docker image with the tag helloworld-java
+
+Step 5: Run the Docker Container:
+Run a Docker container based on the image you just built:
+docker run helloworld-java
+You should see the "Hello, World!" message printed in the console.
+
+Step 6: Create a Kubernetes Deployment
+ 
+
+ 
+Save as deployment.yaml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: helloworld-java-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: helloworld-java
+  template:
+    metadata:
+      labels:
+        app: helloworld-java
+    spec:
+      containers:
+        - name: helloworld-java-container
+          image: <your-docker-username>/helloworld-java
+
+ 
+Step 7: Apply the Deployment to Kubernetes:
+
+Kubectl apply -f deployment.yaml
+Step 8:create a service.yaml file
+apiVersion: v1
+kind: Service
+metadata:
+  name: helloworld-java-service
+spec:
+  selector:
+    app: helloworld-java
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+      nodePort: 30000  # Choose any available port number between 30000 and 32767
+  type: NodePort
+
+Step 9: Expose the Deployment as a Service:
+kubectl apply -f service.yaml 
+
+Step 10 Access the Application:
+kubectl get svc helloworld-java-service
