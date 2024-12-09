@@ -1,0 +1,50 @@
+mongo
+
+Show all databases
+show dbs
+
+To switch to different Database
+use MSC_P1
+
+Show all tables
+show collections
+
+To write hello world
+db.world.insertOne({"Speech": "Hello World"});
+
+cur = db.world.find()
+
+x = cur.next()
+
+cur = db.world.find();x = cur.next();print(x["Speech"]);
+
+
+db.student.inserMany([{name:"ay",age:21},{name:"ay",age:21},{name:"ay",age:21}])
+
+db.student.find()
+
+db.student.findOne({name: 'abc'});
+
+
+db.student.findOne({name: 'abc'}, {_id:0,age:1});
+
+db.student.updateOne({name: 'abc'}, {$set:{age:15}})
+
+db.student.find().pretty()
+
+
+db.student.deleteOne({name: 'abc'});
+
+
+db.Student.insertOne({
+    fname: 'Leela',
+    Marks: [
+        { Subject: 'English', Marks: 80 },
+        { Subject: 'Physics', Marks: 90 },
+        { Subject: 'Maths', Marks: 95 }
+    ]
+});
+
+
+db.Student.updateOne({name: 'Leela', "Marks.Subject":"English"}, {"$set":{"Marks.$.Marks":27}})
+

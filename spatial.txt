@@ -1,0 +1,196 @@
+table
+
+CREATE TABLE cola_market1(
+    mkt_id NUMBER PRIMARY KEY,
+    name VARCHAR2(32),
+    shape MDSYS.SDO_GEOMETRY
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Insertion
+
+INSERT INTO cola_market1 VALUES(
+    1, 
+    'abc', 
+    MDSYS.SDO_GEOMETRY(
+        2003, 
+        NULL, 
+        NULL, 
+        MDSYS.SDO_ELEM_INFO_ARRAY(1, 1003, 3), 
+        MDSYS.SDO_ORDINATE_ARRAY(1, 1, 5, 7)
+    )
+);
+
+
+
+INSERT INTO cola_market1 VALUES(
+    2, 
+    'bcd', 
+    MDSYS.SDO_GEOMETRY(
+        2003, 
+        NULL, 
+        NULL, 
+        MDSYS.SDO_ELEM_INFO_ARRAY(1, 1003, 1), 
+        MDSYS.SDO_ORDINATE_ARRAY(5, 1, 8, 1, 8, 6, 5, 7, 5, 1)
+    )
+);
+
+
+
+INSERT INTO cola_market1 VALUES(
+    3, 
+    'mno', 
+    MDSYS.SDO_GEOMETRY(
+        2003, 
+        NULL, 
+        NULL, 
+        MDSYS.SDO_ELEM_INFO_ARRAY(1, 1003, 1), 
+        MDSYS.SDO_ORDINATE_ARRAY(3, 3, 6, 3, 6, 5, 4, 5, 3, 3)
+    )
+);
+
+
+
+INSERT INTO cola_market1 VALUES(
+    4, 
+    'xyz', 
+    MDSYS.SDO_GEOMETRY(
+        2003, 
+        NULL, 
+        NULL, 
+        MDSYS.SDO_ELEM_INFO_ARRAY(1, 1003, 4), 
+        MDSYS.SDO_ORDINATE_ARRAY(8, 7, 10, 9, 8, 11)
+    )
+);
+
+
+
+INSERT INTO cola_market1 VALUES(
+    5, 
+    'xxxyz', 
+    MDSYS.SDO_GEOMETRY(
+        2003, 
+        NULL, 
+        NULL, 
+        MDSYS.SDO_ELEM_INFO_ARRAY(1, 1003, 2), 
+        MDSYS.SDO_ORDINATE_ARRAY(8, 7, 10, 9, 8, 11)
+    )
+);
+
+
+
+INSERT INTO cola_market1 VALUES(
+    6, 
+    'xxxxyz', 
+    MDSYS.SDO_GEOMETRY(
+        2003, 
+        NULL, 
+        NULL, 
+        MDSYS.SDO_ELEM_INFO_ARRAY(1, 1003, 4), 
+        MDSYS.SDO_ORDINATE_ARRAY(8, 7, 10, 9, 8, 11)
+    )
+);
+
+
+
+
+
+
+Update Metadata
+INSERT INTO user_sdo_geom_metadata VALUES(
+    'cola_market1',
+    'shape',
+    MDSYS.SDO_DIM_ARRAY(
+        MDSYS.SDO_DIM_ELEMENT('X', 0, 20, 0.005),
+        MDSYS.SDO_DIM_ELEMENT('Y', 0, 20, 0.005)
+    ),
+    NULL
+);
+
+
+
+
+
+Spatial Index
+CREATE INDEX cola_spatial_idx
+ON cola_market1(shape)
+INDEXTYPE IS MDSYS.SPATIAL_INDEX;
+
+
+
+
+
+Query to show intersection between the 2 objects
+
+SELECT MDSYS.SDO_GEOM.SDO_INTERSECTION(c_a.shape, c_c.shape, 0.005)
+FROM cola_market1 c_a, cola_market1 c_c
+WHERE c_a.name = 'abc' AND c_c.name = 'mno';
+
+
+
+Do two geometries have any spatial relationship?
+
+SELECT SDO_GEOM.RELATE(c_b.shape, 'equal', c_d.shape, 0.005)
+FROM cola_market1 c_b, cola_market1 c_d
+WHERE c_b.name = 'abc' AND c_d.name = 'mno';
+
+
+
+Return the areas of all cola markets
+
+SELECT name, SDO_GEOM.SDO_AREA(shape, 0.005)
+FROM cola_market1;
+
+
+
+Return the area of just cola_a
+
+SELECT c.name, SDO_GEOM.SDO_AREA(c.shape, 0.005)
+FROM cola_market1 c
+WHERE c.name = 'abc';
+
+
+
+
+Return the distance between two geometries
+
+SELECT SDO_GEOM.SDO_DISTANCE(c_b.shape, c_d.shape, 0.005)
+FROM cola_market1 c_b, cola_market1 c_d
+WHERE c_b.name = 'abc' AND c_d.name = 'xyz';

@@ -1,0 +1,118 @@
+Create the 'employees' table in the admin user account
+
+CREATE TABLE employees (
+    id VARCHAR(10) PRIMARY KEY, 
+    name VARCHAR(100) UNIQUE, 
+    address VARCHAR(200), 
+    salary DECIMAL(10, 2), 
+    date_of_joining DATE
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- Step 2: Insert 5 employee records into the 'employees' table (Admin user)
+INSERT INTO employees VALUES ('E1001', 'Kashyap', 'Kamothe', 200000, TO_DATE('12-Jun-2024', 'DD-Mon-YYYY'));
+INSERT INTO employees VALUES ('E1002', 'Shivam', 'Panvel', 90000, TO_DATE('3-Sep-2024', 'DD-Mon-YYYY'));
+INSERT INTO employees VALUES ('E1003', 'Sam', 'Dadar', 50000, TO_DATE('01-Aug-2024', 'DD-Mon-YYYY'));
+INSERT INTO employees VALUES ('E1004', 'Shyama', 'CST', 150000, TO_DATE('15-Sep-2024', 'DD-Mon-YYYY'));
+INSERT INTO employees VALUES ('E1005', 'Aman', 'Dombivali', 150000, TO_DATE('15-Sep-2024', 'DD-Mon-YYYY'));
+
+
+
+-- Step 3: Create a new user 'demo' with specific privileges
+CREATE USER demo IDENTIFIED BY demo;
+
+
+
+-- Grant necessary privileges to the 'demo' user
+GRANT CREATE SESSION TO demo;
+GRANT CREATE DATABASE LINK TO demo;
+GRANT CREATE TABLE TO demo;
+GRANT CONNECT TO demo;
+GRANT UNLIMITED TABLESPACE TO demo;
+GRANT CREATE PUBLIC DATABASE LINK TO demo;
+
+
+
+-- Step 4: Create a public database link to access the admin's data
+CREATE PUBLIC DATABASE LINK L1 CONNECT TO system IDENTIFIED BY system USING 'XE';
+
+
+
+-- Step 5: Insert 5 more employee records in the 'employees_demo' table (User 'demo')
+CREATE TABLE employees_demo (
+    id VARCHAR(10) PRIMARY KEY, 
+    name VARCHAR(100), 
+    address VARCHAR(200), 
+    salary DECIMAL(10, 2), 
+    date_of_joining DATE
+);
+
+INSERT INTO employees_demo VALUES ('E1006', 'Govind', 'Kalyan', 70000, TO_DATE('01-Jan-2024', 'DD-Mon-YYYY'));
+INSERT INTO employees_demo VALUES ('E1007', 'Diksha', 'Churchgate', 120000, TO_DATE('20-Sep-2024', 'DD-Mon-YYYY'));
+INSERT INTO employees_demo VALUES ('E1008', 'Sheetal', 'Kharghar', 40000, TO_DATE('15-Jul-2024', 'DD-Mon-YYYY'));
+INSERT INTO employees_demo VALUES ('E1009', 'Shivani', 'Belapur', 34000, TO_DATE('01-Aug-2024', 'DD-Mon-YYYY'));
+INSERT INTO employees_demo VALUES ('E1010', 'Shreyash', 'Juinagar', 30000, TO_DATE('15-Sep-2024', 'DD-Mon-YYYY'));
+
+
+
+-- Step 6: Query to get all employee records from both the admin and user tables (using the public database link)
+SELECT * FROM employees_demo 
+UNION 
+SELECT * FROM employees@L1;
+
+
+
+-- Step 7: Query to get name and address of employees with salary greater than 1 Lakh
+SELECT name, address FROM employees_demo WHERE salary > 100000 
+UNION 
+SELECT name, address FROM employees@L1 WHERE salary > 100000;
+
+
+
+-- Step 8: Query to get name and address of the employee with id 'E1002'
+SELECT name, address FROM employees_demo WHERE id = 'E1002' 
+UNION 
+SELECT name, address FROM employees@L1 WHERE id = 'E1002';
+
+
+
+-- Step 9: Query to get names of employees who joined before 1st September 2024
+SELECT name FROM employees_demo WHERE date_of_joining < TO_DATE('01-Sep-2024', 'DD-Mon-YYYY') 
+UNION 
+SELECT name FROM employees@L1 WHERE date_of_joining < TO_DATE('01-Sep-2024', 'DD-Mon-YYYY');
+
+
+
+-- Step 10: Query to get all records of employees staying in 'Dadar'
+SELECT * FROM employees_demo WHERE address = 'Dadar' 
+UNION 
+SELECT * FROM employees@L1 WHERE address = 'Dadar';

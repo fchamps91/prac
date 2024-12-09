@@ -1,0 +1,84 @@
+spatial database
+create table aircraft_location(
+l_id number primary key,
+l_name varchar2(30),
+shape mdsys.sdo_geometry 
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+insert into aircraft_location values(1,'Ambala',mdsys.sdo_geometry(2003,null,null,mdsys.sdo_elem_info_array(1,1003,3),mdsys.sdo_ordinate_array(1,1,5,7)));
+
+insert into aircraft_location values(1,'Tejas',mdsys.sdo_geometry(2003,null,null,mdsys.sdo_elem_info_array(1,1003,1),mdsys.sdo_ordinate_array(5,1,8,1,8,6,5,7,5,1)));
+
+insert into aircraft_location values(3,'Dhruv',mdsys.sdo_geometry(2003,null,null,mdsys.sdo_elem_info_array(1,1003,1),mdsys.sdo_ordinate_array(3,3,7,3,7,5,3,5)));
+
+insert into aircraft_location values(4,'hawk132',mdsys.sdo_geometry(2003,null,null,mdsys.sdo_elem_info_array(1,1003,4),mdsys.sdo_ordinate_array(8,6,10,9,9,11)));
+
+insert into user_sdo_geom_metadata
+values(
+'aircraft_location',
+'shape',
+mdsys.sdo_dim_array(mdsys.sdo_dim_element('X',0,20,0.005),sdo_dim_element('Y',0,20,0.005)
+),
+null
+)
+ 
+
+create index aircraft_location_idx
+on aircraft_location(shape)
+indextype is mdsys.spatial_index
+/
+
+SELECT MDSYS.SDO_GEOM.SDO_INTERSECTION(al1.shape, al2.shape, 0.005) 
+FROM aircraft_location al1, aircraft_location al2 
+WHERE al1.l_name = 'Ambala' AND al2.l_name = 'Tejas';
+
+
+SELECT l_name, 
+       MDSYS.SDO_GEOM.VALIDATE_GEOMETRY_WITH_CONTEXT(shape, 0.005) AS validation_result
+FROM aircraft_location
+WHERE l_name IN ('Ambala', 'Tejas');
+
+select mdsys.sdo_geom.sdo_intersection(al_a.shape,al_t.shape,0.005)
+from aircraft_location al_a, aircraft_location al_t
+where al_a.l_name = 'Ambala' and al_t.l_name = 'Tejas';
+
+select sdo_geom.relate(al_a.shape,'equal',al_t.shape,0.005)
+from aircraft_location al_a, aircraft_location al_t
+where al_a.l_name = 'Ambala' and al_t.l_name = 'Tejas';
+
+select l_name, sdo_geom.sdo_area(shape,0.005) from aircraft_location where l_name='Tejas';
+
+select sdo_geom.sdo_distance(al_a.shape,al_t.shape,0.005)
+from aircraft_location al_a, aircraft_location al_t
+where al_a.l_name = 'Ambala' and al_t.l_name = 'hawk132';

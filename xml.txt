@@ -1,0 +1,143 @@
+-- Create Employee Table
+CREATE TABLE emp_xml15 (
+    Emp_id NUMBER(4),
+    Employee_spec XMLTYPE
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- Insert values into the table
+INSERT INTO emp_xml15 VALUES (1, XMLTYPE(
+    '<emp id="1">
+        <name>sameer</name>
+        <email>sami@somaiya.edu</email>
+        <acc_no>23456</acc_no>
+        <mgr_email>sahil@hotmail.com</mgr_email>
+        <doj>12/12/2000</doj>
+    </emp>'
+));
+
+INSERT INTO emp_xml15 VALUES (1, XMLTYPE(
+    '<emp id="2">
+        <name>ABC</name>
+        <email>abc@somaiya.edu</email>
+        <acc_no>1234</acc_no>
+        <mgr_email>abc@hotmail.com</mgr_email>
+        <doj>09/11/2007</doj>
+    </emp>'
+));
+
+INSERT INTO emp_xml15 VALUES (1, XMLTYPE(
+    '<emp id="3">
+        <name>DEF</name>
+        <email>def@somaiya.edu</email>
+        <acc_no>5678</acc_no>
+        <mgr_email>def@hotmail.com</mgr_email>
+        <doj>24/10/2008</doj>
+    </emp>'
+));
+
+INSERT INTO emp_xml15 VALUES (1, XMLTYPE(
+    '<emp id="4">
+        <name>GHI</name>
+        <email>ghi@somaiya.edu</email>
+        <acc_no>5654</acc_no>
+        <mgr_email>def@hotmail.com</mgr_email>
+        <doj>06/10/2010</doj>
+    </emp>'
+));
+
+INSERT INTO emp_xml15 VALUES (1, XMLTYPE(
+    '<emp id="5">
+        <name>JKL</name>
+        <email>jkl@somaiya.edu</email>
+        <acc_no>7544</acc_no>
+        <mgr_email>jkl@hotmail.com</mgr_email>
+        <doj>17/05/2011</doj>
+    </emp>'
+));
+
+
+
+
+
+
+
+-- Display names of all employees
+SELECT 
+    e.employee_spec.extract('//name/text()').getStringVal() "EMP_NAME"
+FROM emp_xml15 e;
+
+
+
+-- Show all account numbers
+SELECT 
+    e.employee_spec.extract('//acc_no/text()').getStringVal() "EMP_ACC_NO"
+FROM emp_xml15 e;
+
+
+
+-- Retrieve name, email, and account number
+SELECT 
+    e.employee_spec.extract('//name/text()').getStringVal() "EMP_NAME",
+    e.employee_spec.extract('//email/text()').getStringVal() "EMP_EMAIL",
+    e.employee_spec.extract('//acc_no/text()').getStringVal() "EMP_ACC_NO"
+FROM emp_xml15 e;
+
+
+
+-- Update the table by changing the name for account number 1234
+UPDATE emp_xml15 w
+SET employee_spec = XMLTYPE(
+    '<employees>
+        <emp id="9">
+            <name>Ayon</name>
+        </emp>
+    </employees>'
+)
+WHERE w.employee_spec.extract('//acc_no/text()').getStringVal() = '1234';
+
+
+
+-- Delete the employee details of employee name 'Ayon'
+DELETE FROM emp_xml15 w
+WHERE w.employee_spec.extract('//name/text()').getStringVal() = 'Ayon';

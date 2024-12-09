@@ -1,0 +1,127 @@
+VERITCAL FRAG
+
+
+
+
+
+
+Log in as SYSTEM (admin user)
+Assuming you're logged in as SYSTEM (admin user) and can perform actions on other users
+
+-- Step 2: Create user schemas and grant necessary privileges (done by SYSTEM user)
+
+-- Create user1 for storing fragment 1: roll_number, name, address
+CREATE USER user1 IDENTIFIED BY user1_password;
+GRANT CONNECT, RESOURCE TO user1;  -- Grant necessary privileges to user1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- Create user2 for storing fragment 2: department, add_course, fees_paid
+CREATE USER user2 IDENTIFIED BY user2_password;
+GRANT CONNECT, RESOURCE TO user2;  -- Grant necessary privileges to user2
+
+-- Step 3: Create tables in user1 and user2 schemas (done by SYSTEM user)
+
+-- Create table 'student1' in 'user1' schema (storing roll_number, name, address)
+CREATE TABLE user1.student1 (
+    roll_number INT PRIMARY KEY, 
+    name VARCHAR2(20), 
+    address VARCHAR2(20)
+);
+
+-- Create table 'student2' in 'user2' schema (storing department, add_course, fees_paid)
+CREATE TABLE user2.student2 (
+    roll_number INT PRIMARY KEY, 
+    department VARCHAR2(20), 
+    add_course VARCHAR2(20), 
+    fees_paid INT
+);
+
+-- Step 4: Insert data into the fragmented tables (done by SYSTEM user)
+
+-- Insert data into 'student1' (user1 schema)
+INSERT INTO user1.student1 (roll_number, name, address)
+VALUES (1001, 'Jane Smith', 'Andheri');
+INSERT INTO user1.student1 (roll_number, name, address)
+VALUES (1002, 'John Doe', 'Andheri');
+INSERT INTO user1.student1 (roll_number, name, address)
+VALUES (1003, 'Alice Brown', 'Dadar');
+INSERT INTO user1.student1 (roll_number, name, address)
+VALUES (1004, 'Bob Johnson', 'Dadar');
+INSERT INTO user1.student1 (roll_number, name, address)
+VALUES (1005, 'Charlie Davis', 'Borivali');
+
+-- Insert data into 'student2' (user2 schema)
+INSERT INTO user2.student2 (roll_number, department, add_course, fees_paid)
+VALUES (1001, 'Arts', 'Music, Dance', 50000);
+INSERT INTO user2.student2 (roll_number, department, add_course, fees_paid)
+VALUES (1002, 'Science', 'Research', 750000);
+INSERT INTO user2.student2 (roll_number, department, add_course, fees_paid)
+VALUES (1003, 'Geography', 'Rock Climbing', 20000);
+INSERT INTO user2.student2 (roll_number, department, add_course, fees_paid)
+VALUES (1004, 'Maths', 'Research', 50000);
+INSERT INTO user2.student2 (roll_number, department, add_course, fees_paid)
+VALUES (1005, 'Literature', 'Reading', 30000);
+
+-- Step 5: Perform Queries on Fragmented Data (These can be run by user1 or user2)
+
+-- Query 1: Display all records of the student table (joining user1.student1 and user2.student2)
+SELECT * FROM user1.student1 
+JOIN user2.student2 ON user1.student1.roll_number = user2.student2.roll_number;
+
+-- Query 2: Display additional course name for a student roll number "82"
+SELECT add_course 
+FROM user2.student2 
+WHERE roll_number = 82;
+
+-- Query 3: Display fees paid for a given student name "any name"
+SELECT fees_paid 
+FROM user2.student2 
+JOIN user1.student1 ON user2.student2.roll_number = user1.student1.roll_number
+WHERE user1.student1.name = 'any name';
+
+-- Query 4: Display the name of the student and fees paid for a given roll number "any roll number"
+SELECT name, fees_paid 
+FROM user1.student1 
+JOIN user2.student2 ON user1.student1.roll_number = user2.student2.roll_number
+WHERE user1.student1.roll_number = 'any roll number';
+
+-- Query 5: Display name of student whose fees paid is greater than a given value "any value"
+SELECT name 
+FROM user1.student1 
+JOIN user2.student2 ON user1.student1.roll_number = user2.student2.roll_number
+WHERE user2.student2.fees_paid > 'any value';

@@ -1,0 +1,202 @@
+redis
+
+Insert Data into Redis
+
+Users Data
+HSET user:1000 name "Alice" email "alice@example.com" registration_date "2024-10-01"
+HSET user:1001 name "Bob" email "bob@example.com" registration_date "2024-10-02"
+
+Courses Data
+HSET course:200 title "Introduction to Redis" description "Learn Redis from scratch" instructor_id 300
+HSET course:201 title "Advanced Python" description "Deep dive into Python programming" instructor_id 301
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# 3. Videos Data
+HSET video:400 title "What is Redis?" duration "10:00" upload_date "2024-10-01" course_id 200
+HSET video:401 title "Python Basics" duration "15:00" upload_date "2024-10-02" course_id 201
+
+# 4. Quizzes Data
+HSET quiz:500 title "Redis Basics Quiz" total_questions 10 course_id 200
+HSET quiz:501 title "Python Basics Quiz" total_questions 5 course_id 201
+
+# 5. Feedback Data
+LPUSH feedback:200 "Alice: Great course!" "Bob: Very informative."
+LPUSH feedback:201 "Alice: Loved the content!" "Bob: Helpful for beginners."
+
+# 6. Enrollments Data
+SADD enrollments:1000 200  # Alice enrolls in "Introduction to Redis"
+SADD enrollments:1001 201  # Bob enrolls in "Advanced Python"
+
+# Step 7: Execute Queries
+
+# a. How many users have enrolled in each course?
+HINCRBY course:200:enrollments 1  # Increment enrollments for "Introduction to Redis"
+HINCRBY course:201:enrollments 1  # Increment enrollments for "Advanced Python"
+GET course:200:enrollments
+GET course:201:enrollments
+
+# b. How many times has each video been viewed?
+HINCRBY video:400:views 1  # Increment views for "What is Redis?"
+HINCRBY video:401:views 1  # Increment views for "Python Basics"
+GET video:400:views
+GET video:401:views
+
+# c. How can we efficiently store and retrieve user feedback for each course?
+LPUSH feedback:200 "Alice: Great course!" "Bob: Very informative."
+LPUSH feedback:201 "Alice: Loved the content!" "Bob: Helpful for beginners."
+LRANGE feedback:200 0 -1  # Get all feedback for "Introduction to Redis"
+LRANGE feedback:201 0 -1  # Get all feedback for "Advanced Python"
+
+# d. How many quizzes have been completed by each user?
+HINCRBY user:1000:quizzes_completed 1  # Increment quizzes completed by Alice
+HINCRBY user:1001:quizzes_completed 1  # Increment quizzes completed by Bob
+GET user:1000:quizzes_completed
+GET user:1001:quizzes_completed
+
+# e. What are the top N courses based on enrollments?
+ZREVRANGE course:popular 0 N WITHSCORES
+
+# f. How can we retrieve a summary of activities for a specific user?
+HGETALL user:1000:activity_summary  # Get activity summary for Alice
+
+# g. How can we retrieve all feedback provided for a specific course?
+LRANGE feedback:200 0 -1  # Retrieve all feedback for "Introduction to Redis"
+
+# h. Who are the users who have engaged in more than X activities in the last week?
+ZRANGEBYSCORE user:activity:weekly-inf +inf LIMIT 0 N
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2) 
+
+# Adding Drivers to the memory
+HSET driver:001 name "Kashyap Velani" age 20 vehicle "2 Wheeler" area "Navi Mumbai" location_lat "40.7128" location_long "-74.006"
+SADD drivers "driver:001"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+HSET driver:002 name "Krishna Thakker" age 20 vehicle "2 Wheeler Electric" area "Dombivali" location_lat "42.2822" location_long "-70.6323"
+SADD drivers "driver:002"
+
+HSET driver:003 name "Ekta Nishad" age 21 vehicle "2 Wheeler" area "Thane" location_lat "32.3433" location_long "68.6343"
+SADD drivers "driver:003"
+
+HSET driver:004 name "Shivam Sharma" age 23 vehicle "2 Wheeler" area "Navi Mumbai" location_lat "12.7123" location_long "24.006"
+SADD drivers "driver:004"
+
+# Show all Drivers
+KEYS driver:*
+SMEMBERS drivers
+
+# Show specific driver with parameter
+HGET driver:001 name
+HGET driver:002 location_lat
+
+# Setting Real-time Order Count
+SET totalOrders 349233
+
+# Updating orders in real-time
+GETSET totalOrders 349234
+
+# Adding Drivers to specific locations (real-time tracking)
+ZADD driver:area:naviMumbai "driver:001"
+ZADD driver:area:naviMumbai 5 "driver:004"
+
+# Getting drivers in the area based on score
+ZRANGEBYSCORE driver:area:naviMumbai 0 1
+
+# Adding drivers to Dombivli and Thane areas
+ZADD driver:area:dombivli 5 "driver:002"
+ZADD driver:area:thane 5 "driver:003"
+
+# Retrieving drivers from Thane based on score
+ZRANGEBYSCORE driver:area:thane 0 10
+
+# Fetching specific driver details
+HGET driver:003 name
+HGET driver:003 location_lat
+HGET driver:003 location_long
+HGET driver:003 vehicle
+HGET driver:003 area
+
+# Fetch all details for a specific driver
+HGETALL driver:003
+
+# Update the location_lat for driver:003
+HSET driver:003 location_lat "33.3433"
+
+# Fetch the updated location_lat for driver:003
+HGET driver:003 location_lat
+
+

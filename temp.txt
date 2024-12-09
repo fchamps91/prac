@@ -1,0 +1,165 @@
+Create a temporal database with time as a column
+CREATE TABLE tbl_shares15 (
+    cname VARCHAR2(20),
+    nofshares NUMBER(5),
+    pricepershare NUMBER(5),
+    transtime TIMESTAMP
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- 2. Insert into Database
+INSERT INTO tbl_shares15 VALUES ('Ayon', 50, 100, CURRENT_TIMESTAMP);
+INSERT INTO tbl_shares15 VALUES ('Nova', 500, 1000, CURRENT_TIMESTAMP);
+INSERT INTO tbl_shares15 VALUES ('Xyz', 5, 10, CURRENT_TIMESTAMP);
+
+
+
+-- 3. Show all records in the table
+SELECT * FROM tbl_shares15;
+
+
+
+-- 4. Select record according to the condition 1
+SELECT cname 
+FROM tbl_shares15 
+WHERE pricepershare > 15 
+  AND TO_CHAR(transtime, 'HH12:MI:AM') = '11:45:AM';
+
+
+
+-- 5. Select record according to the condition 2
+SELECT cname 
+FROM tbl_shares15 
+WHERE pricepershare IN (
+    SELECT MAX(pricepershare)
+    FROM tbl_shares15
+    WHERE TO_CHAR(transtime, 'HH12:MI:AM') = '05:30:PM'
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- 6. Create table with valid_from and valid_to
+CREATE TABLE stock_prices (
+    company_name VARCHAR2(50),
+    price_per_share NUMBER(10, 2),
+    valid_from TIMESTAMP, -- The time when this record became valid
+    valid_to TIMESTAMP, -- The time when this record became invalid
+    PRIMARY KEY (company_name, valid_from)
+);
+
+
+
+-- 7. Insert historical data for company A
+INSERT INTO stock_prices 
+VALUES ('Company A', 100.50, TIMESTAMP '2023-01-01 00:00:00', TIMESTAMP '2023-06-30 23:59:59');
+INSERT INTO stock_prices 
+VALUES ('Company A', 105.75, TIMESTAMP '2023-07-01 00:00:00', TIMESTAMP '2023-12-13 23:59:59');
+
+
+
+-- 8. Insert historical data for company B
+INSERT INTO stock_prices 
+VALUES ('Company B', 120.00, TIMESTAMP '2023-12-31 23:59:59', TIMESTAMP '9999-12-31 23:59:59');
+
+
+
+-- 9. Get the current stock price for company A
+SELECT company_name, price_per_share
+FROM stock_prices
+WHERE company_name = 'Company A'
+  AND SYSDATE BETWEEN valid_from AND valid_to;
+
+
+
+-- 10. Get the stock price of Company A as of March 1, 2023
+SELECT company_name, price_per_share
+FROM stock_prices
+WHERE company_name = 'Company A'
+  AND TIMESTAMP '2023-03-01 00:00:00' BETWEEN valid_from AND valid_to;
+
+
+
+-- 11. Update the table
+UPDATE stock_prices
+SET valid_to = TIMESTAMP '2023-12-31 23:59:59'
+WHERE company_name = 'Company A'
+  AND valid_to = TIMESTAMP '9999-12-31 23:59:59';
+
+
+
+-- 12. Insert new stock price
+INSERT INTO stock_prices (company_name, price_per_share, valid_from, valid_to)
+VALUES ('Company A', 110.25, TIMESTAMP '2024-01-01 00:00:00', TIMESTAMP '9999-12-31 23:59:59');
+
+
+
+-- 13. Get full history of stock prices for company A
+SELECT company_name, price_per_share, valid_from, valid_to
+FROM stock_prices
+WHERE company_name = 'Company A'
+ORDER BY valid_from;
+
+
+
+
+
