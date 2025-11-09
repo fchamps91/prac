@@ -1,0 +1,91 @@
+# Practical No 3 
+
+Links :
+
+java:
+https://drive.google.com/file/d/1uq3mb7rBd1BFHcEcExQp4_nAxbvx3Hhb/view?usp=drive_link
+
+spark:
+https://drive.google.com/file/d/17p5765iEEe-Ri5w-THUD3AK1Zws1RMHE/view?usp=drive_link
+
+
+Code:
+
+# To Read a Data From a File (Scala is Case Sensitive)
+
+val x = spark.read.<type of file>("file path")
+
+# To see Output
+
+x.show()
+
+
+# Lets try to do it on new json file that we have created
+
+[ 
+  {"name":"goku", "age":10},
+  {"name":"vegata", "age":8},
+  {"name":"bulma", "age":9} 
+]
+
+
+# Import this Spark.sql 
+
+import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.functions.col
+
+
+# Create or get existing Spark session
+
+val spark = SparkSession.builder.appName("DBZ_JSON").getOrCreate()
+
+
+# Read the JSON file Path
+
+val path = "C:/Spark/spark-3.5.6-bin-hadoop3/examples/src/main/resources/DBZ.json"
+
+
+# Read the JSON File
+
+val df = spark.read.option("multiLine", "true").json(path)
+
+
+# Create or Replace temporary Template SQL view
+
+df.createOrReplaceTempView("DBZ")
+
+
+# Query 
+
+val result = spark.sql("SELECT * FROM DBZ WHERE age > 9")
+
+
+# To Show Result 
+
+df.show() or df.show
+
+
+# Query 
+
+x.count()
+var count = x.count()
+count
+
+
+# Lets try on CSV files
+
+val spark = SparkSession.builder.appName("banking").getOrCreate()
+
+val path = "C:/Spark/spark-3.5.6-bin-hadoop3/examples/src/main/resources/banking.csv"
+
+val df = spark.read.option("multiLine", "true").csv("C:/Spark/spark-3.5.6-bin-hadoop3/examples/src/main/resources/banking.csv")
+
+df.createOrReplaceTempView("banking")
+
+df.show
+
+import org.apache.spark.sql.functions.avg;
+
+val avgAge = df.select(avg($"age").alias("Average_Age")); 
+
+avgAge.show

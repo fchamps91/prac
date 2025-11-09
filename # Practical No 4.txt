@@ -1,0 +1,99 @@
+# Practical No 4
+
+Links :
+
+java:
+https://drive.google.com/file/d/1uq3mb7rBd1BFHcEcExQp4_nAxbvx3Hhb/view?usp=drive_link
+
+spark:
+https://drive.google.com/file/d/17p5765iEEe-Ri5w-THUD3AK1Zws1RMHE/view?usp=drive_link
+
+
+Code:
+        
+# Now go to C:\Spark\spark-3.5.6-bin-hadoop3\bin and Open CMD
+ 
+spark-shell
+
+
+# Imports 
+
+import org.apache.spark._
+import org.apache.spark.rdd.RDD
+import org.apache.spark.graphx._
+
+# Create vertices 
+
+val vertices = Array((1L, "A"), (2L, "B"), (3L, "C"))
+
+# Convert vertices into an RDD
+
+val vRDD=sc.parallelize(vertices)
+
+# Preview the vertices 
+
+vRDD.take(1)
+vRDD.take(3)
+vRDD.take(2)
+
+# Create edges 
+
+val edges = Array(Edge(1L, 2L, 1800), Edge(2L, 3L, 800), Edge(3L, 1L, 1400))
+
+# Convert edges to an RDD 
+
+val eRDD=sc.parallelize(edges)
+
+# Preview the edges 
+
+eRDD.take(2)
+
+# Create the Graph 
+
+val graph = Graph(vRDD, eRDD, "nowhere")
+
+# View vertices of the graph 
+
+graph.vertices.collect.foreach(println)
+
+
+# View edges of the graph
+
+graph.edges.collect.foreach(println)
+
+
+# Count vertices and edges 
+
+val numberAirport = graph.numVertices
+val numRoutes = graph.numEdges
+
+
+# Compute in-degrees 
+
+val i = graph.inDegrees
+i.collect()
+
+
+# Compute out-degrees 
+
+val o = graph.outDegrees
+o.collect()
+
+
+# Compute total degree of each vertex 
+
+val o = graph.outDegrees
+o.collect()
+
+
+# Show degree values 
+
+d.collect()
+
+
+# Filter edges with property > 1000
+
+(graph.edges.filter{case Edge(src, dst, prop) => prop >1000}.collect.foreach(println))
+
+
+

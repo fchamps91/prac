@@ -1,0 +1,81 @@
+# Practical No 6
+
+Links :
+
+java:
+https://drive.google.com/file/d/1uq3mb7rBd1BFHcEcExQp4_nAxbvx3Hhb/view?usp=drive_link
+
+spark:
+https://drive.google.com/file/d/17p5765iEEe-Ri5w-THUD3AK1Zws1RMHE/view?usp=drive_link
+
+
+Code:
+
+# Set PYSPARK_HOME Environment Variable
+
+# Now go to C:\Spark\spark-3.5.6-bin-hadoop3\bin and Open CMD 
+
+spark-shell
+
+# After that Type “:quit”
+
+:quit
+
+# After that Type “pyspark”
+
+pyspark
+
+# Define the File Path First 
+
+file_path = "file:///C:/employees.csv"
+
+# Load the CSV File 
+
+df = spark.read.csv(file_path, header = True, inferSchema = True, escape = '"')
+
+# Show the Data of CSV File
+
+df.show()
+
+# Show the Schema
+
+df.printSchema()
+
+# Basic Operations (Filter and sort)
+
+df.select("name", "department").show()
+df.filter(df.salary > 50000).show()
+df.filter(df.salary > 50000).orderBy(df.salary.desc()).show()
+
+# Advance Filtering and Conditions
+
+df.filter(df.salary > 50000).show()
+df.where(df.department == "IT").show()
+
+# Grouping and Aggregation
+
+df.groupBy("department").avg("salary").show()
+df.groupBy("city").count().show()
+
+# Add or Modify Columns
+
+from pyspark.sql.functions import when, col
+df2 = df.withColumn("salary_band",
+        when(col("salary") < 50000, "Low")
+       .when(col("salary") < 70000, "Medium")
+       .otherwise("High"))
+df2.show()
+
+# Rename or Drop Columns
+
+df2 = df2.withColumnRenamed("name", "employee_name")
+df2.drop("city").show()
+
+# SQL Queries (Simple Queries)
+
+df.createOrReplaceTempView("employees")
+spark.sql("SELECT department, AVG(salary) FROM employees GROUP BY department").show()
+
+# If any data is existing it overwrites
+
+df.write.mode("overwrite").csv("output_employees", header=True)

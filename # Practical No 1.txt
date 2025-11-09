@@ -1,0 +1,86 @@
+# Practical No 1 
+Links : 
+
+bin:
+https://drive.google.com/file/d/11g6jjmkp2XWdDhn-Ws_p2NkB5EGSm_HY/view?usp=drive_link
+
+java:
+https://drive.google.com/file/d/1uq3mb7rBd1BFHcEcExQp4_nAxbvx3Hhb/view?usp=drive_link
+
+
+Code:
+# core-site.xml
+
+<property>
+    <name>fs.defaultFS</name>
+    <value>hdfs://localhost:9000</value>
+</property>
+
+
+# hdfs-site.xml
+
+<property>
+    <name>dfs.replication</name>
+    <value>1</value>
+</property>
+<property>
+    <name>dfs.namenode.name.dir</name>
+    <value>file:///C:/hadoop/data/namenode</value>
+</property>
+<property>
+    <name>dfs.datanode.data.dir</name>
+    <value>file:///C:/hadoop/data/datanode</value>
+</property>
+
+# mapred-site.xml
+
+<property>
+    <name>mapreduce.framework.name</name>
+    <value>yarn</value>
+</property>
+
+# yarn-site.xml
+
+<property>
+    <name>yarn.nodemanager.aux-services</name>
+    <value>mapreduce_shuffle</value>
+</property>
+
+
+###### Open "C:\Hadoop\etc\hadoop\hadoop-env.cmd" file in Notepad.
+“@rem The java implementation to use. Required. Set JAVA_HOME=%JAVA_HOME%”
+Replace the Above line with the below Code #######
+
+@rem The java implementation to use.  Required.
+set JAVA_HOME=C:\Progra~1\Java\jdk1.8.0_171
+set PATH=%JAVA_HOME%\bin;%PATH%
+
+
+# Open a New CMD and Run it as Administrator
+
+java -version
+javac -version
+echo %JAVA_HOME%
+java -version
+
+echo %HADOOP_HOME%
+where hdfs
+hadoop version
+
+hdfs namenode -format
+
+cd C:\hadoop\sbin
+start-dfs.cmd
+start-yarn.cmd
+hadoop version
+
+jps
+
+
+HDFS NameNode: http://localhost:9870
+
+YARN ResourceManager: http://localhost:8088
+
+
+
+

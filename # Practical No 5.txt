@@ -1,0 +1,66 @@
+# Practical No 5
+
+Links : # before typing this on cmd Create a folder named as "Scala-cli" and redirect it to that folder
+
+             -->  curl -fLo scala-cli.zip https://github.com/Virtuslab/scala-cli/releases/latest/download/scala-cli-x86_64-pc-win32.zip
+        
+             -->  jar -xf scala-cli.zip
+
+
+# Hello World Program
+
+object MSc {
+  def main(args: Array[String]): Unit = {
+    println("Hello, My Classmates!!!")
+  }
+}
+
+# To Run 
+
+MSc.main(Array())
+
+# Write a Scala program to add two numbers and display the result
+
+object SumExample {
+def main(args: Array[String]): Unit = {
+val a = 10
+val b = 20
+val sum = a + b
+println(s"The sum of $a and $b is $sum")
+}
+
+# To Run 
+ 
+SumExample.main(Array())
+
+# Write a program in Scala to store and print details of a student
+
+object StudentInfo {
+  def main(args: Array[String]): Unit = {
+    val name = "Wasim"
+    val age = 22
+    val branch = "computer science"
+
+    println(s"Hello! My name is $name and my age is $age")
+    println(s"My branch name is $branch")
+  }
+}
+
+# To Run 
+ 
+StudentInfo.main(Array())
+
+# Write a Scala program to demonstrate an infinite while loop
+
+object InfiniteWhileLoopDemo {
+  def main(args: Array[String]): Unit = {
+    var x = 1
+    while (x < 5) {  // infinite loop since x never changes
+      println("MSc CS")
+    }
+  }
+}
+
+# To Run 
+ 
+InfiniteWhileLoopDemo.main(Array())

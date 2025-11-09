@@ -1,0 +1,119 @@
+# Practical No 2 
+
+# Links:
+
+bin:
+https://drive.google.com/file/d/11g6jjmkp2XWdDhn-Ws_p2NkB5EGSm_HY/view?usp=drive_link
+
+java:
+https://drive.google.com/file/d/1uq3mb7rBd1BFHcEcExQp4_nAxbvx3Hhb/view?usp=drive_link
+
+
+Code:
+
+# WordCountMapper.java
+
+import java.io.IOException;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Mapper;
+
+public class WordCountMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
+    private final static IntWritable one = new IntWritable(1);
+    private Text word = new Text();
+    public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+        String line = value.toString();
+        String[] words = line.split("\\s+");
+        for (String w : words) {
+            word.set(w);
+            context.write(word, one);
+        }
+    }
+}
+
+# WordCountReducer.java
+
+import java.io.IOException;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Reducer;
+
+public class WordCountReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
+    public void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
+        int sum = 0;
+        for (IntWritable val : values) {
+            sum += val.get();
+        }
+        context.write(key, new IntWritable(sum));
+    }
+}
+
+
+# WordCountDriver.java
+
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+
+public class WordCountDriver {
+    public static void main(String[] args) throws Exception {
+        if (args.length != 2) {
+            System.err.println("Usage: WordCountDriver <input path> <output path>");
+            System.exit(-1);
+        }
+        Configuration conf = new Configuration();
+        Job job = Job.getInstance(conf, "Word Count");
+        job.setJarByClass(WordCountDriver.class);
+        job.setMapperClass(WordCountMapper.class);
+        job.setReducerClass(WordCountReducer.class);
+        job.setOutputKeyClass(Text.class);
+        job.setOutputValueClass(IntWritable.class);
+        FileInputFormat.addInputPath(job, new Path(args[0]));
+        FileOutputFormat.setOutputPath(job, new Path(args[1]));
+        System.exit(job.waitForCompletion(true) ? 0 : 1);
+    }
+}
+
+# Add All the 3 .java file in a NEWLY CREATED File 
+
+# Start the Daemons
+
+cd C:\hadoop\sbin
+start-dfs.cmd
+start-yarn.cmd
+
+jps
+
+# Change the Directory to the Created Folder
+
+# Compile the File
+
+javac -classpath "%HADOOP_HOME%\share\hadoop\common\hadoop-common-3.3.6.jar;%HADOOP_HOME%\share\hadoop\mapreduce\hadoop-mapreduce-client-core-3.3.6.jar;%HADOOP_HOME%\share\hadoop\common\lib\commons-cli-1.2.jar;%HADOOP_HOME%\share\hadoop\common\lib\slf4j-api-1.7.30.jar" -d . WordCountMapper.java WordCountReducer.java WordCountDriver.java
+
+# Note : After Successfully Compiling you will see .class has been Created in your folder
+
+# This will Create a Runnable Jar
+
+jar -cvf wordcount.jar *.class
+
+
+# Put input data into HDFS
+
+hdfs dfs -mkdir -p /user/input
+hdfs dfs -put input.txt /user/input
+
+
+# Run the MapReduce Job
+
+hadoop jar wordcount.jar WordCountDriver /user/input /user/output
+
+
+# View Results
+
+hdfs dfs -cat /user/output/part-r-00000
+
