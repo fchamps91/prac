@@ -97,3 +97,136 @@ d.collect()
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Step 1 : Install Apache Spark From the Given Link 
+@https://www.apache.org/dyn/closer.lua/spark/spark-3.5.6/spark-3.5.6-bin-hadoop3.tgz
+
+Step 2 : After Installation Set SPARK_HOME Environment Variable
+
+Step 3 : Also add this path in System And User Variable
+
+
+Step 4 : Install Scala By Typing this on Cmd
+curl -fLo scala-cli.zip
+https://github.com/Virtuslab/scala-cli/releases/latest/download/scala-cli-x86_64-pc-win32.zip
+jar -xf scala-cli.zip
+
+Step 5 : After Installation Set SCALA_HOME Environment Variable
+
+Step 6 : Also add this path in System And User Variable
+
+Step 7 : Open File Explorer and Find Where you have Installed Scala File and Open CMD of that Location 
+scala-cli version
+
+
+Step 8 : Now go to C:\Spark\spark-3.5.6-bin-hadoop3\bin and Open CMD 
+spark-shell
+
+
+
+Step 9 : Imports 
+import org.apache.spark._
+import org.apache.spark.rdd.RDD
+import org.apache.spark.graphx._
+
+
+Step 10 : Create vertices 
+val vertices = Array((1L, "A"), (2L, "B"), (3L, "C"))
+
+
+Step 11 : Convert vertices into an RDD
+val vRDD=sc.parallelize(vertices)
+
+Step 12 : Preview the vertices 
+vRDD.take(1)
+vRDD.take(3)
+vRDD.take(2)
+
+
+Step 13 : Create edges 
+val edges = Array(Edge(1L, 2L, 1800), Edge(2L, 3L, 800), Edge(3L, 1L, 1400))
+
+
+Step 14 : Convert edges to an RDD 
+val eRDD=sc.parallelize(edges)
+
+
+
+
+
+Step 15 : Preview the edges 
+eRDD.take(2)
+
+Step 16 : Create the Graph 
+val graph = Graph(vRDD, eRDD, "nowhere")
+
+Step 17 : View vertices of the graph 
+graph.vertices.collect.foreach(println)
+Step 18 : View edges of the graph
+graph.edges.collect.foreach(println)
+
+Step 19 : Count vertices and edges 
+val numberAirport = graph.numVertices
+val numRoutes = graph.numEdges
+
+
+Step 20 : Compute in-degrees 
+val i = graph.inDegrees
+i.collect()
+
+
+Step 21 : Compute out-degrees 
+val o = graph.outDegrees
+o.collect()
+
+
+Step 22 : Compute total degree of each vertex 
+val o = graph.outDegrees
+o.collect()
+
+
+Step 23 : Show degree values 
+d.collect()
+
+
+Step 24 : Filter edges with property > 1000
+(graph.edges.filter{case Edge(src, dst, prop) => prop >1000}.collect.foreach(println))
+

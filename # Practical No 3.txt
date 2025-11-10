@@ -89,3 +89,144 @@ import org.apache.spark.sql.functions.avg;
 val avgAge = df.select(avg($"age").alias("Average_Age")); 
 
 avgAge.show
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Step 1 : Install Apache Spark From the Given Link 
+@https://www.apache.org/dyn/closer.lua/spark/spark-3.5.6/spark-3.5.6-bin-hadoop3.tgz
+
+Step 2 : After Installation Set SPARK_HOME Environment Variable
+
+Step 3 : Also add this path in System And User Variable
+
+
+Step 4 : Install Scala By Typing this on Cmd
+curl -fLo scala-cli.zip
+https://github.com/Virtuslab/scala-cli/releases/latest/download/scala-cli-x86_64-pc-win32.zip
+jar -xf scala-cli.zip
+
+Step 5 : After Installation Set SCALA_HOME Environment Variable
+
+Step 6 : Also add this path in System And User Variable
+
+Step 7 : Open File Explorer and Find Where you have Installed Scala File and Open CMD of that Location  
+
+scala-cli version
+
+
+Step 8 : Now go to C:\Spark\spark-3.5.6-bin-hadoop3\bin and Open CMD 
+
+
+spark-shell
+
+Step 9 : To Read a Data From a File (Scala is Case Sensitive)
+val x = spark.read.<type of file>("file path")
+
+
+Step 10 : To see Output
+x.show()
+
+
+Step 11 : Lets try to do it on new json file that we have created
+[ 
+  {"name":"goku", "age":10},
+  {"name":"vegata", "age":8},
+  {"name":"bulma", "age":9} 
+]
+
+Step 12 : Import this Spark.sql 
+import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.functions.col
+
+
+Step 13 : Create or get existing Spark session
+val spark = SparkSession.builder.appName("DBZ_JSON").getOrCreate()
+
+
+Step 14 : Read the JSON file Path
+val path = "C:/Spark/spark-3.5.6-bin-hadoop3/examples/src/main/resources/DBZ.json"
+
+Step 15 : Read the JSON File
+val df = spark.read.option("multiLine", "true").json(path)
+
+Step 16 : Create or Replace temporary Template SQL view
+df.createOrReplaceTempView("DBZ")
+
+
+Step 17 : Query 
+val result = spark.sql("SELECT * FROM DBZ WHERE age > 9")
+
+
+Step 18 : To Show Result 
+df.show() or df.show
+
+
+Step 19 : Query 
+x.count()
+var count = x.count()
+count
+
+
+Step 20 : Lets try on CSV files
+val spark = SparkSession.builder.appName("banking").getOrCreate()
+val path = "C:/Spark/spark-3.5.6-bin-hadoop3/examples/src/main/resources/banking.csv"
+val df = spark.read.option("multiLine", "true").csv("C:/Spark/spark-3.5.6-bin-hadoop3/examples/src/main/resources/banking.csv")
+df.createOrReplaceTempView("banking")
+df.show
+import org.apache.spark.sql.functions.avg;
+val avgAge = df.select(avg($"age").alias("Average_Age")); 
+avgAge.show
+
+
+
+
+
+
+
+
+
+
+scala> val bank = spark.read.option("header", "true").csv("C:/Spark/spark-3.5.6-bin-hadoop3/examples/src/main/resources/banking.csv")
+bank: org.apache.spark.sql.DataFrame = [age: string, job: string ... 19 more fields]
+
+scala> bank.count
+res13: Long = 41188
+
+scala> val avgAge = bank.select(avg($"age").alias("Average_Age"));
+avgAge: org.apache.spark.sql.DataFrame = [Average_Age: double]
+
+scala> avgAge.show()
++-----------------+
+|      Average_Age|
++-----------------+
+|40.02406040594348|
++-----------------+
+

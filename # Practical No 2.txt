@@ -79,7 +79,7 @@ public class WordCountDriver {
     }
 }
 
-# Add All the 3 .java file in a NEWLY CREATED File 
+# Add All the 3 .java file in a NEWLY CREATED Folder
 
 # Start the Daemons
 

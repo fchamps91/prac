@@ -79,3 +79,121 @@ spark.sql("SELECT department, AVG(salary) FROM employees GROUP BY department").s
 # If any data is existing it overwrites
 
 df.write.mode("overwrite").csv("output_employees", header=True)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Step 1 : Set PYSPARK_HOME Environment Variable
+
+Step 2 :  Now go to C:\Spark\spark-3.5.6-bin-hadoop3\bin and Open CMD 
+spark-shell
+
+Step 3 : After that Type “:quit”
+:quit
+
+
+Step 3 : After that Type “pyspark”
+pyspark
+
+Step 4 : Define the File Path First 
+file_path = "file:///C:/employees.csv"
+
+
+Step 5 : Load the CSV File 
+df = spark.read.csv(file_path, header = True, inferSchema = True, escape = '"')
+
+
+Step 6 :  Show the Data of CSV File
+df.show()
+
+Step 7 : Show the Schema
+df.printSchema()
+
+Step 8 : Basic Operations (Filter and sort)
+df.select("name", "department").show()
+df.filter(df.salary > 50000).show()
+df.filter(df.salary > 50000).orderBy(df.salary.desc()).show()
+
+Step 9 : Advance Filtering and Conditions
+df.filter(df.salary > 50000).show()
+df.where(df.department == "IT").show()
+
+
+Step 10 : Grouping and Aggregation
+df.groupBy("department").avg("salary").show()
+df.groupBy("city").count().show()
+
+Step 11 : Add or Modify Columns
+from pyspark.sql.functions import when, col
+df2 = df.withColumn("salary_band",
+        when(col("salary") < 50000, "Low")
+       .when(col("salary") < 70000, "Medium")
+       .otherwise("High"))
+df2.show()
+
+Step 12 : Rename or Drop Columns
+df2 = df2.withColumnRenamed("name", "employee_name")
+df2.drop("city").show()
+
+Step 13 : SQL Queries (Simple Queries)
+df.createOrReplaceTempView("employees")
+spark.sql("SELECT department, AVG(salary) FROM employees GROUP BY department").show()
+
+
+Step 14 : If any data is existing it overwrites
+df.write.mode("overwrite").csv("output_employees", header=True)
+

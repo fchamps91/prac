@@ -84,3 +84,111 @@ YARN ResourceManager: http://localhost:8088
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+Step 1 : Download Java 1.8 Version 
+@https://www.oracle.com/in/java/technologies/javase/javase8-archive-downloads.html
+
+Step 2 : Set JAVA_HOME Environment Variable
+
+Step 3 : Download Hadoop 3.3.6 tar.gz
+@https://hadoop.apache.org/release/3.3.6.html
+
+Step 4 : Hadoop needs some files like winutils.exe and hadoop.dll to work on Windows. These are not included in the official download.
+Download Whole Zip File and Just Extract What you Need…for e.g.  hadoop-3.3.6/bin
+@https://github.com/cdarlint/winutils
+
+Step 5 : Create a new Hadoop Folder and Extract the hadoop-3.3.6.tar file 
+
+Step 6 : Extract  winutils.exe, hadoop.dll, and other files you downloaded from the GitHub repository into your Hadoop bin folder 
+
+Step 7 : Set HADOOP_HOME Environment Variable
+
+Step 8 : Under System Variable You will see “Path” Under that add these two location 
+“ %HADOOP_HOME%\bin ”  “ %HADOOP_HOME%\sbin ”  “ %JAVA_HOME% ”
+
+Step 9 : Now Under this Directory i.e. C:\Hadoop, Create a New folder Name “data” under this Folder Create two more Folder “datanode” “namenode”
+
+Step 10 : Open this XML Files in Notepad or Vs Code and Paste this Code in Between the <Configuration> tags:
+
+1. core-site.xml
+<property>
+    <name>fs.defaultFS</name>
+    <value>hdfs://localhost:9000</value>
+</property>
+
+2. hdfs-site.xml
+<property>
+    <name>dfs.replication</name>
+    <value>1</value>
+</property>
+<property>
+    <name>dfs.namenode.name.dir</name>
+    <value>file:///C:/hadoop/data/namenode</value>
+</property>
+<property>
+    <name>dfs.datanode.data.dir</name>
+    <value>file:///C:/hadoop/data/datanode</value>
+</property>
+
+3. mapred-site.xml
+<property>
+    <name>mapreduce.framework.name</name>
+    <value>yarn</value>
+</property>
+
+4. yarn-site.xml
+<property>
+    <name>yarn.nodemanager.aux-services</name>
+    <value>mapreduce_shuffle</value>
+</property>
+
+
+Step 11 : Open "C:\Hadoop\etc\hadoop\hadoop-env.cmd" file in Notepad.
+
+“@rem The java implementation to use. Required. Set JAVA_HOME=%JAVA_HOME%”
+Replace the Above line with the below Code
+
+@rem The java implementation to use.  Required.
+set JAVA_HOME=C:\Progra~1\Java\jdk1.8.0_171
+set PATH=%JAVA_HOME%\bin;%PATH%
+
+
+Step 12 : Open a New CMD and Run it as Administrator
+java -version
+javac -version
+echo %JAVA_HOME%
+java -version
+
+echo %HADOOP_HOME%
+where hdfs
+hadoop version
+
+hdfs namenode -format
+
+cd C:\hadoop\sbin
+start-dfs.cmd
+start-yarn.cmd
+
+Note : Don’t Close any cmd let it run in the background
+
+hadoop version
+jps
+
+
+Step 13 : Open Google Chrome and Type this Link
+
+HDFS NameNode: http://localhost:9870
+YARN ResourceManager: http://localhost:8088
+
