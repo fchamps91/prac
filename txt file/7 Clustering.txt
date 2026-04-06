@@ -1,0 +1,24 @@
+from sklearn.datasets import fetch_20newsgroups
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.cluster import KMeans, AgglomerativeClustering
+from sklearn.metrics import silhouette_score
+from scipy.cluster.hierarchy import linkage, dendrogram
+import matplotlib.pyplot as plt
+cats = ['alt.atheism','soc.religion.christian','comp.graphics','sci.med']
+data = fetch_20newsgroups(subset='all', categories=cats,
+                          remove=('headers','footers','quotes'))
+X = TfidfVectorizer(stop_words='english', max_features=1000).fit_transform(data.data)
+k = len(cats)
+km_labels = KMeans(n_clusters=k, random_state=42, n_init=10).fit_predict(X)
+print("\n=== K-Means Clustering Result ===")
+print("Clusters:", k)
+print("Silhouette Score:", round(silhouette_score(X, km_labels), 4))
+hc_labels = AgglomerativeClustering(n_clusters=k).fit_predict(X.toarray())
+print("\n=== Hierarchical Clustering Result ===")
+print("Clusters:", k)
+X_small = X.toarray()[:100]
+Z = linkage(X_small, method='ward')
+plt.figure(figsize=(8,4))
+plt.title("Hierarchical Clustering Dendrogram")
+dendrogram(Z, truncate_mode='level', p=10)
+plt.show()
